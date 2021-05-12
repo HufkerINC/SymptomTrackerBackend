@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import static org.springframework.security.config.Customizer.withDefaults;
+import java.util.Arrays;
 
 
 @Configuration
@@ -43,8 +48,28 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll() // Alle de sider som er nødvendige for at gøre ovenstående skal være lovlige før log-ind
                 .and()
                 .logout().permitAll() // Der skal være en side man skal logge ud på og denne skal være lovlig
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")); // den side man logger ud på
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // den side man logger ud på
+                .and()
+                .cors(withDefaults()) // Fortæller Spring security at den skal bruge den CORS bean som vi definbere nedenfor.
+                .csrf().disable(); // Vi fortæller Spring security at den sikkerhedsmekanismen med at sætte tekens ind på alle html sider og forvente at dette token bliver inkluderet i alle posts, slås fra. Dette er vi nødt til at disable fordi vi ikke bruger thymeleas som ellers plejer at tage sig af det.
     }
+
+
+    // CORS er et sikkerhedssystem i alle browsere til at sikre at backenden kun accepterer requests som kommer fra de rigtige webdomæner.
+    // Jeg skal bruge det her fordi jeg køre to forskellige servere til henholdsvis front- og back-end.
+    // Spring starter security tilbyder måder at konfigurere SPRINGS CORS-funktionalitet.
+    // Denne bean bruges til at fortælle Spring Security hvilke andre web domæner som også har lov til at sende services til os.
+    // Den skal bruges fordi vores backend og frontend er separate og således har forskellige domæner (url, port mv.)
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342/")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
