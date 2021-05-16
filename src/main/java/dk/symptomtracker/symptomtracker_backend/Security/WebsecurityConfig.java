@@ -42,7 +42,7 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() // Alle andre requests end ovenstående skal man være logget ind for at tilgå.
                 .and()
                 .formLogin() // Man logger ind gennem en form i html som man poster fra.
-                .loginPage("/login") // Den form som man skal poste ovenstående fra finder man ved at følge denne sti.
+                .loginPage("/SymptomTrackerFrontend/login") // Den form som man skal poste ovenstående fra finder man ved at følge denne sti.
                 .defaultSuccessUrl("/userMainPage") // Efter login skal brugeren rediregeres til denne side.
                 .usernameParameter("email") // Når man poster et logind så skal email tolkes som username. Ellers vil spring forvente et username.
                 .permitAll() // Alle de sider som er nødvendige for at gøre ovenstående skal være lovlige før log-ind
@@ -51,7 +51,7 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // den side man logger ud på
                 .and()
                 .cors(withDefaults()) // Fortæller Spring security at den skal bruge den CORS bean som vi definbere nedenfor.
-                .csrf().disable(); // Vi fortæller Spring security at den sikkerhedsmekanismen med at sætte tekens ind på alle html sider og forvente at dette token bliver inkluderet i alle posts, slås fra. Dette er vi nødt til at disable fordi vi ikke bruger thymeleas som ellers plejer at tage sig af det.
+                .csrf().disable(); // Vi fortæller Spring security at den sikkerhedsmekanismen med at sætte tokens ind på alle html sider og forvente at dette token bliver inkluderet i alle posts, slås fra. Dette er vi nødt til at disable fordi vi ikke bruger thymeleas som ellers plejer at tage sig af det.
     }
 
 
@@ -63,7 +63,7 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342/")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
