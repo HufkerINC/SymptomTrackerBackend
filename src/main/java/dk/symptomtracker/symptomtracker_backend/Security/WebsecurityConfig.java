@@ -4,12 +4,16 @@ import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -37,18 +41,36 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.authorizeRequests()// Vi vil gerne autoiserer hvilke http requests som må finde sted i hele programmet. Hvornår må programmet køre som "normalt"
+
+        // On which sites is authorization (session coockie) needen for access?
+        http.authorizeRequests()
                 .antMatchers("/createAccount/**").permitAll() // Disse sider må brugeren poste til uden at være logget ind (NB! Securyty sørger for at brugeren ligeledes må poste til /login)
                 .anyRequest().authenticated() // Alle andre requests end ovenstående skal man være logget ind for at tilgå.
+
+                // What should happen if the above restrictions on authorization of access is not met (client tries to access without cookie)
+                // Instead of security default redirect --> failure to authorize senario
+                // When client (witcout cookie) tries to contact protected URLs (endpoint they are not authorized to), create HttpStatusEntryPoint obj and return appropriate statuscode.
                 .and()
-                .formLogin() // Man logger ind gennem en form i html som man poster fra.
-                .loginPage("/SymptomTrackerFrontend/login") // Den form som man skal poste ovenstående fra finder man ved at følge denne sti.
-                .defaultSuccessUrl("/userMainPage") // Efter login skal brugeren rediregeres til denne side.
+                .exceptionHandling()
+                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)) // UNAUTHORIZED = statuscode 401.
+
+
+                // Is the password and username correct. What should happen if authorization of user (through password and username) is a) confirmed or b) denied.
+                // Instead of security default redirect.
+                // Standard login form that sends 204-NO_CONTENT when login is OK and 401-UNAUTHORIZED when login fails
+                .and()
+                .formLogin()// Login happens through a form post.
+                .successHandler((request, response, auth) -> response.setStatus(HttpStatus.NO_CONTENT.value()))
+                .failureHandler(new SimpleUrlAuthenticationFailureHandler()) // UNAUTHORIZED = statuscode 401 is returned in pesponse.
                 .usernameParameter("email") // Når man poster et logind så skal email tolkes som username. Ellers vil spring forvente et username.
-                .permitAll() // Alle de sider som er nødvendige for at gøre ovenstående skal være lovlige før log-ind
+
+                // There has to be an endpoint for logout.
+                // There handler will return a no-content statuscode when succes instead of default redirect.
+                // standard logout that sends 204-NO_CONTENT when logout is OK
                 .and()
-                .logout().permitAll() // Der skal være en side man skal logge ud på og denne skal være lovlig
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // den side man logger ud på
+                .logout()// There has to be an endpoint for logout
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
+
                 .and()
                 .cors(withDefaults()) // Fortæller Spring security at den skal bruge den CORS bean som vi definbere nedenfor.
                 .csrf().disable(); // Vi fortæller Spring security at den sikkerhedsmekanismen med at sætte tokens ind på alle html sider og forvente at dette token bliver inkluderet i alle posts, slås fra. Dette er vi nødt til at disable fordi vi ikke bruger thymeleas som ellers plejer at tage sig af det.
@@ -70,10 +92,11 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsServiceImpl()).passwordEncoder(passwordEncoder());
     }
 
 }
+
+// Security configuration info on: https://stackoverflow.com/questions/31714585/spring-security-disable-login-page-redirect
