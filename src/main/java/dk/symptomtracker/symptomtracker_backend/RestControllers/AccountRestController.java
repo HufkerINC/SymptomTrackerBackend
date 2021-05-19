@@ -44,3 +44,7 @@ public class AccountRestController {
 
     }
 }
+
+// info: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+// info: https://www.baeldung.com/spring-mvc-controller-custom-http-status-code
+// info: https://stackoverflow.com/questions/24292373/spring-boot-rest-controller-how-to-return-different-http-status-codes
