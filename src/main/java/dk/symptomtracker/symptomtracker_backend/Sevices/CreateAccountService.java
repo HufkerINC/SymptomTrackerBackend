@@ -9,7 +9,9 @@ public class CreateAccountService {
 
     public boolean addAccountToDB(String email, String password, PasswordEncoder passwordEncoder, UserRepository userRepository) {
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        String lowerCaseEmail = email.toLowerCase();
+
+        Optional<User> userOptional = userRepository.findByEmail(lowerCaseEmail);
 
         if (userOptional.isPresent()) {
             return false;
@@ -19,7 +21,7 @@ public class CreateAccountService {
             // Create new instance of User
             User user = new User();
 
-            user.setEmail(email);
+            user.setEmail(lowerCaseEmail);
             user.setPassword(passwordEncoder.encode(password));
 
             // Save User object to DB
