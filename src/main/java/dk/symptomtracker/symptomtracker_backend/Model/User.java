@@ -13,7 +13,9 @@ public class User {
     private String email;
     private String name;
     private String password;
-    private String activity_strain_visibility_shell;
+
+    @Column(name="activity_strain_visibility_shell")
+    private int activityStrainVisibilityShell;
 
 
     // Getters and setters
@@ -38,8 +40,7 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getActivity_strain_visibility_shell() { return activity_strain_visibility_shell; }
-    public void setActivity_strain_visibility_shell(String activity_strain_visibility_shell) {
-        this.activity_strain_visibility_shell = activity_strain_visibility_shell;
-    }
+    public int getActivityStrainVisibilityShell() { return activityStrainVisibilityShell; }
+        public void setActivityStrainVisibilityShell(int activityStrainVisibilityShell) {
+        this.activityStrainVisibilityShell = activityStrainVisibilityShell; }
 }

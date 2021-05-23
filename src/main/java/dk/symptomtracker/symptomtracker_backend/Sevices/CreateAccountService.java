@@ -23,6 +23,7 @@ public class CreateAccountService {
 
             user.setEmail(lowerCaseEmail);
             user.setPassword(passwordEncoder.encode(password));
+            user.setActivityStrainVisibilityShell(000);
 
             // Save User object to DB
             userRepository.save(user);

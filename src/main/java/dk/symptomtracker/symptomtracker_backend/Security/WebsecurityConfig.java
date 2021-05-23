@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -85,7 +84,7 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:1234")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         configuration.setAllowCredentials(true); // It is allowed for the client (browser) to access the cookie in response header.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
