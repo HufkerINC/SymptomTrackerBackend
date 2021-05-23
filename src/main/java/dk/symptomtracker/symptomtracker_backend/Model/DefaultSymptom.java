@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "default_symptom")
-public class defaultSymptom {
+public class DefaultSymptom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

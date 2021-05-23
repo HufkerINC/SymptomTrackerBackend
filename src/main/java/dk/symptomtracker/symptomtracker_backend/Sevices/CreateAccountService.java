@@ -1,8 +1,9 @@
 package dk.symptomtracker.symptomtracker_backend.Sevices;
 
-import dk.symptomtracker.symptomtracker_backend.Model.User;
-import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
+import dk.symptomtracker.symptomtracker_backend.Model.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 import java.util.Optional;
 
 public class CreateAccountService {

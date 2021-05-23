@@ -1,7 +1,9 @@
 package dk.symptomtracker.symptomtracker_backend.RestControllers;
 
+import dk.symptomtracker.symptomtracker_backend.Model.DefaultSymptomRepository;
 import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
 import dk.symptomtracker.symptomtracker_backend.Sevices.CreateAccountService;
+import dk.symptomtracker.symptomtracker_backend.Sevices.NewUserSymptomListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ public class AccountRestController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private DefaultSymptomRepository defaultSymptomRepository;
+
     @PostMapping("/createAccount")
     public ResponseEntity createAccount(WebRequest dataFromFormCreateAccount){
 
@@ -34,12 +39,18 @@ public class AccountRestController {
         boolean accountAdded = createAccountService.addAccountToDB(email, password, passwordEncoder, userRepository);
 
         if(accountAdded){
+
+            // Create a default symptomlist for new account.
+            NewUserSymptomListService newUserSymptomListService = new NewUserSymptomListService();
+            newUserSymptomListService.createSymptomListForUser(defaultSymptomRepository, userRepository, email);
+
             return new ResponseEntity(HttpStatus.CREATED) ; } // Status code 201
 
         else{
             return new ResponseEntity(HttpStatus.FORBIDDEN); } // Status code 403
 
     }
+
 }
 
 // info: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
