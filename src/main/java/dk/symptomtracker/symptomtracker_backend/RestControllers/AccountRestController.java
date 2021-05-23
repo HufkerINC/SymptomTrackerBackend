@@ -1,6 +1,5 @@
 package dk.symptomtracker.symptomtracker_backend.RestControllers;
 
-import dk.symptomtracker.symptomtracker_backend.Model.User;
 import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
 import dk.symptomtracker.symptomtracker_backend.Sevices.CreateAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
-
-import javax.servlet.http.HttpServletResponse;
 
 
 @RestController

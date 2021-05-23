@@ -13,6 +13,7 @@ public class User {
     private String email;
     private String name;
     private String password;
+    private String activity_strain_visibility_shell;
 
 
     // Getters and setters
@@ -36,4 +37,9 @@ public class User {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getActivity_strain_visibility_shell() { return activity_strain_visibility_shell; }
+    public void setActivity_strain_visibility_shell(String activity_strain_visibility_shell) {
+        this.activity_strain_visibility_shell = activity_strain_visibility_shell;
+    }
 }

@@ -24,6 +24,8 @@ public class Activity {
 
     int strain;
 
+    @Column(name="user_id")
+    int userId;
 
 
     // Getters and setters
@@ -63,4 +65,9 @@ public class Activity {
     public void setStrain(int strain) {
         this.strain = strain;
     }
+
+    public int getUserId() { return userId; }
+
+    public void setUserId(int userId) { this.userId = userId; }
+
 }
