@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.time.LocalDate;
 
 @RestController
-public class MainPageController {
+public class MainPageRestController {
 
     @Autowired
     SymptomRepository symptomRepository;
 
 
     @GetMapping("/createAccount")
-    public <Principle> String getHomePageData(@RequestParam LocalDate dateRequested, Principle principle){
+    public String getHomePageData(@RequestParam LocalDate dateRequested, Principal principal){
 
         SymptomComponentPresenter symptomComponentPresenter = new SymptomComponentPresenter();
 

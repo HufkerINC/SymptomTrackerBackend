@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 
-public interface SymptomRepository extends JpaRepository<Activity, Integer> {
+public interface SymptomRepository extends JpaRepository<Symptom, Integer> {
 
 
 }

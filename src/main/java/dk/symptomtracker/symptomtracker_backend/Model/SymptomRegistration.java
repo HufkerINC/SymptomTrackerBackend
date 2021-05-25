@@ -17,7 +17,7 @@ public class SymptomRegistration {
 
     private LocalDate date;
 
-    private Enum intensity;
+    private int intensity;
 
     @Column(name="symptom_id")
     private int symptomId;
@@ -31,8 +31,8 @@ public class SymptomRegistration {
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
 
-    public Enum getIntensity() { return intensity; }
-    public void setIntensity(Enum intensity) { this.intensity = intensity; }
+    public int getIntensity() { return intensity; }
+    public void setIntensity(int intensity) { this.intensity = intensity; }
 
     public int getSymptomId() { return symptomId; }
     public void setSymptomId(int symptomId) { this.symptomId = symptomId; }
