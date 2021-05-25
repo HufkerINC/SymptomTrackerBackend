@@ -5,10 +5,8 @@ import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistration;
 import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistrationRepository;
 import dk.symptomtracker.symptomtracker_backend.Model.SymptomRepository;
 import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomRegistrationVTO;
-
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public class SymptomComponentPresenter {
@@ -40,6 +38,8 @@ public class SymptomComponentPresenter {
                     symptomRegistrationRepository.findSymptomRegistrationsBySymptomIdAndDate
                             (allSymptomsList.get(i).getId(), date);
 
+
+            // In case the number of registrations on a symptom matches the expected number of registrations on the symptom.
             if(intensityArray.length == symptomRegistrationList.size()) {
 
                 // Sort symptomRegistration obj in symptomRegistrationArray. Sort symptomRegistration obj by their regNum number.
@@ -55,15 +55,9 @@ public class SymptomComponentPresenter {
                 }
             }
 
+
+            // In case the number of registrations on a symptom does not matches the expected number of registrations on the symptom.
             else{
-
-                int[] regNumArray = new int[intensityArray.length];
-
-                for(int j = 0; j < symptomRegistrationList.size(); j++) {
-
-                    int regNum = symptomRegistrationList.get(j).getRegNum();
-                    regNumArray[regNum - 1] = regNum;
-                }
 
                 switch(symptomRegistrationList.size()) {
 
@@ -127,7 +121,6 @@ public class SymptomComponentPresenter {
                     case 2: // in case there are 2 registrations on symptom,
                             // and 3 registrations where expected.
 
-
                         if(symptomRegistrationList.get(0).getRegNum() == 2 && symptomRegistrationList.get(1).getRegNum() == 1){
                             intensityArray[0] = symptomRegistrationList.get(1).getIntensity(); // Set intencity for regNum = 1
                             intensityArray[1] = symptomRegistrationList.get(0).getIntensity(); // Set intencity for regNum = 2
@@ -145,16 +138,9 @@ public class SymptomComponentPresenter {
                             intensityArray[1] = 0; // set intencity for regNum = 2
                             intensityArray[2] = symptomRegistrationList.get(0).getIntensity(); // set intencity for regNum = 3
                         }
-
-                    break;
-
-                    default:
-
                     break;
 
                 }
-
-
             }
 
             symptomRegistrationVTO.setIntensityArray(intensityArray);
@@ -163,7 +149,6 @@ public class SymptomComponentPresenter {
 
         return symptomRegistrationVTOArray;
     }
-
 }
 
 
