@@ -1,8 +1,6 @@
 package dk.symptomtracker.symptomtracker_backend.VTOs;
 
 import dk.symptomtracker.symptomtracker_backend.Model.Symptom;
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistration;
-
 
 public class SymptomVTO {
 
