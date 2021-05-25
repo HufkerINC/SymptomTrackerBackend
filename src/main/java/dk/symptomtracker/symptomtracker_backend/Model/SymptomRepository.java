@@ -11,6 +11,6 @@ public interface SymptomRepository extends JpaRepository<Symptom, Integer> {
 
 
     @Query("select e from Symptom e where e.userId = ?1")
-    public List<SymptomRegistration> getAllSymptomsForUser(int userId);
+    public List<Symptom> getAllSymptomsForUser(int userId);
 
 }

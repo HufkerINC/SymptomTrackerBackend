@@ -1,9 +1,6 @@
 package dk.symptomtracker.symptomtracker_backend.Presenters;
 
-import dk.symptomtracker.symptomtracker_backend.Model.Symptom;
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistration;
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistrationRepository;
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRepository;
+import dk.symptomtracker.symptomtracker_backend.Model.*;
 import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomVTO;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -14,13 +11,18 @@ public class SymptomComponentPresenter {
     public SymptomVTO[] getDataForSymptomComponent(SymptomRepository symptomRepository,
                                                    SymptomRegistrationRepository symptomRegistrationRepository,
                                                    LocalDate date,
-                                                   Principal principal){
+                                                   Principal principal, UserRepository userRepository){
 
-        List<Symptom> symptomList = symptomRepository.getAllSymptomsForUser(principal.getId());
+        // Get logged i user
+        User loggedInUser = userRepository.findByEmail(principal.getName()).get();
 
+        // get list of all symptoms for logged in user
+        List<Symptom> symptomList = symptomRepository.getAllSymptomsForUser(loggedInUser.getId());
+
+        // Create Array of SymptomVTO's - this is the return value.
         SymptomVTO[] symptomVTOArray = new SymptomVTO[symptomList.size()];
 
-
+        //  Make one SymptomVTO for every symptom for logged in user. Put each SymptomVTO in SymptomVTOArray
         for(int i = 0; i < symptomList.size(); i++){
 
             // Create SymptomVTO object.
