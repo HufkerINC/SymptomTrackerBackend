@@ -4,7 +4,7 @@ import dk.symptomtracker.symptomtracker_backend.Model.Symptom;
 import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistration;
 
 
-public class SymptomRegistrationVTO {
+public class SymptomVTO {
 
     private Symptom symptom;
     private int[] intensityArray;

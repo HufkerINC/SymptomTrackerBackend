@@ -19,9 +19,7 @@ public class User {
 
 
     // Getters and setters
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
     public String getEmail() {
         return email;
