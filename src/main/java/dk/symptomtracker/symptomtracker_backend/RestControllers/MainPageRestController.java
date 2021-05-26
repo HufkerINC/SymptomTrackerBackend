@@ -57,7 +57,7 @@ public class MainPageRestController {
         LocalDate date = LocalDate.parse(dataFromFormSymptomRegistration.getParameter("date"), formatter);
 
         // Varify that the symptomId matches a symptom on logged in user.
-        boolean symptomVarified = symptomRegistrationService.varifyUserSymptom(symptomId,
+        boolean symptomVerified = symptomRegistrationService.verifyUserSymptom(symptomId,
                                                                         principal,
                                                                         userRepository,
                                                                         symptomRepository);
@@ -67,7 +67,7 @@ public class MainPageRestController {
         Optional<SymptomRegistration> systemRegistrationOptional = symptomRegistrationRepository
                 .findSymptomRegistrationsBySymptomIdDateRegNum(symptomId, date, regNum);
 
-        // If symptomregistration should be updated
+        // If symptom registration should be updated
         if(systemRegistrationOptional.isPresent()){
 
             SymptomRegistration symptomRegistration = systemRegistrationOptional.get();

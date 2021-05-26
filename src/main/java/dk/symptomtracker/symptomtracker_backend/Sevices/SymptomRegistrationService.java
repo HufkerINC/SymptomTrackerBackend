@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class SymptomRegistrationService {
 
-    public boolean varifyUserSymptom(int symptomId,
+    public boolean verifyUserSymptom(int symptomId,
                                      Principal principal,
                                      UserRepository userRepository,
                                      SymptomRepository symptomRepository){
