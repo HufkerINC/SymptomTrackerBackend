@@ -3,7 +3,6 @@ package dk.symptomtracker.symptomtracker_backend.Sevices;
 import dk.symptomtracker.symptomtracker_backend.Model.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.Optional;
 
 public class SymptomRegistrationService {
@@ -22,27 +21,37 @@ public class SymptomRegistrationService {
         if(optionalSymptom.isPresent()){
             return true;
         }
+
         else {
             return false;
         }
     }
 
+    public void saveRegistration(SymptomRegistration symptomRegistrationFromPost,
+                                 SymptomRegistrationRepository symptomRegistrationRepository){
 
-    public void saveSymptomRegistrationInDB(SymptomRegistration symptomRegistration,
-                                       SymptomRegistrationRepository symptomRegistrationRepository,
-                                       int symptomId,
-                                       int intensity,
-                                       int regNum,
-                                       LocalDate date){
+        // Find out whether symptomRegistrationFromPost should be an update of an existing symptom registration,
+        // or whether it should be a new registration in DB.
+        Optional<SymptomRegistration> systemRegistrationOptional = symptomRegistrationRepository
+                .findSymptomRegistrationsBySymptomIdDateRegNum(symptomRegistrationFromPost.getSymptomId(),
+                                                                symptomRegistrationFromPost.getDate(),
+                                                                symptomRegistrationFromPost.getRegNum());
+        // If symptom registration should be updated
+        if(systemRegistrationOptional.isPresent()){
 
-        // set attributes on symptomregistration obj.
-        symptomRegistration.setIntensity(intensity);
-        symptomRegistration.setRegNum(regNum);
-        symptomRegistration.setDate(date);
-        symptomRegistration.setSymptomId(symptomId);
+            SymptomRegistration existingSymptomRegistration = systemRegistrationOptional.get();
 
-        symptomRegistrationRepository.save(symptomRegistration);
+            existingSymptomRegistration.setSymptomId(symptomRegistrationFromPost.getSymptomId());
+            existingSymptomRegistration.setRegNum(symptomRegistrationFromPost.getRegNum());
+            existingSymptomRegistration.setDate(symptomRegistrationFromPost.getDate());
+            existingSymptomRegistration.setIntensity(symptomRegistrationFromPost.getIntensity());
 
+            symptomRegistrationRepository.save(existingSymptomRegistration);
+        }
+
+        // If symptom registration should be created and saved
+        else {
+            symptomRegistrationRepository.save(symptomRegistrationFromPost);
+        }
     }
-
 }

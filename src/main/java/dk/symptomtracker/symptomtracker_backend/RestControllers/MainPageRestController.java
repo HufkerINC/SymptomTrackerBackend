@@ -6,11 +6,10 @@ import dk.symptomtracker.symptomtracker_backend.Sevices.SymptomRegistrationServi
 import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomVTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -49,48 +48,22 @@ public class MainPageRestController {
 
 
     @PostMapping("/symptomRegistration")
-    public void postSymptomComponent(WebRequest dataFromFormSymptomRegistration, Principal principal){
+    public void postSymptomComponent(@RequestBody SymptomRegistration symptomRegistrationFromPost, Principal principal){
 
         SymptomRegistrationService symptomRegistrationService = new SymptomRegistrationService();
 
-        // Get data from weRequest and parse data to appropriate datatype for storage in db.
-        int symptomId = Integer.parseInt(dataFromFormSymptomRegistration.getParameter("symptomId"));
-        int intensity = Integer.parseInt(dataFromFormSymptomRegistration.getParameter("intensity"));
-        int regNum = Integer.parseInt(dataFromFormSymptomRegistration.getParameter("regNum"));
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d-MMM-yyyy");
-        LocalDate date = LocalDate.parse(dataFromFormSymptomRegistration.getParameter("date"), formatter);
-
         // Varify that the symptomId matches a symptom on logged in user.
-        boolean symptomVerified = symptomRegistrationService.verifyUserSymptom(symptomId,
+        boolean symptomVerified = symptomRegistrationService.verifyUserSymptom(
+                                                                        symptomRegistrationFromPost.getSymptomId(),
                                                                         principal,
                                                                         userRepository,
                                                                         symptomRepository);
-
-
-        // Save symptom registration to db.
-        Optional<SymptomRegistration> systemRegistrationOptional = symptomRegistrationRepository
-                .findSymptomRegistrationsBySymptomIdDateRegNum(symptomId, date, regNum);
-
-        // If symptom registration should be updated
-        if(systemRegistrationOptional.isPresent()){
-
-            SymptomRegistration symptomRegistration = systemRegistrationOptional.get();
-
-            symptomRegistrationService.saveSymptomRegistrationInDB(symptomRegistration,
-                    symptomRegistrationRepository,
-                    symptomId, intensity, regNum, date);
+        if(!symptomVerified){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                                "verification failed due mismatch between symptomId and userId"); // status code: 403
         }
 
-        // If symptom registration should be created and saved
-        else{
-            SymptomRegistration newSymptomRegistration = new SymptomRegistration();
-
-            symptomRegistrationService.saveSymptomRegistrationInDB(newSymptomRegistration,
-                    symptomRegistrationRepository,
-                    symptomId, intensity, regNum, date);
-        }
-
+        symptomRegistrationService.saveRegistration(symptomRegistrationFromPost, symptomRegistrationRepository);
     }
 
 }

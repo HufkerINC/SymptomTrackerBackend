@@ -24,7 +24,9 @@ public class CreateAccountService {
 
             user.setEmail(lowerCaseEmail);
             user.setPassword(passwordEncoder.encode(password));
-            user.setActivityStrainVisibilityShell(000);
+            user.setRedStrainVisibility(false);
+            user.setYellowStrainVisibility(false);
+            user.setGreenStrainVisibility(false);
 
             // Save User object to DB
             userRepository.save(user);
