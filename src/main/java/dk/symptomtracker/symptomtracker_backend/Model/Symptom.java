@@ -40,8 +40,8 @@ public class Symptom {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public int getDefaultSymptomId() { return defaultSymptomId; }
-    public void setDefaultSymptomId(int defaultSymptomId) { this.defaultSymptomId = defaultSymptomId; }
+    public Integer getDefaultSymptomId() { return defaultSymptomId; }
+    public void setDefaultSymptomId(Integer defaultSymptomId) { this.defaultSymptomId = defaultSymptomId; }
 
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
