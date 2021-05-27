@@ -14,8 +14,14 @@ public class User {
     private String name;
     private String password;
 
-    @Column(name="activity_strain_visibility_shell")
-    private int activityStrainVisibilityShell;
+    @Column(name="red_strain_visibility")
+    private boolean redStrainVisibility;
+
+    @Column(name="yellow_strain_visibility")
+    private boolean yellowStrainVisibility;
+
+    @Column(name="green_strain_visibility")
+    private boolean greenStrainVisibility;
 
 
     // Getters and setters
@@ -38,7 +44,12 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public int getActivityStrainVisibilityShell() { return activityStrainVisibilityShell; }
-        public void setActivityStrainVisibilityShell(int activityStrainVisibilityShell) {
-        this.activityStrainVisibilityShell = activityStrainVisibilityShell; }
+    public boolean isRedStrainVisibility() { return redStrainVisibility; }
+    public void setRedStrainVisibility(boolean redStrainVisibility) { this.redStrainVisibility = redStrainVisibility; }
+
+    public boolean isYellowStrainVisibility() { return yellowStrainVisibility; }
+    public void setYellowStrainVisibility(boolean yellowStrainVisibility) { this.yellowStrainVisibility = yellowStrainVisibility; }
+
+    public boolean isGreenStrainVisibility() { return greenStrainVisibility; }
+    public void setGreenStrainVisibility(boolean greenStrainVisibility) { this.greenStrainVisibility = greenStrainVisibility; }
 }

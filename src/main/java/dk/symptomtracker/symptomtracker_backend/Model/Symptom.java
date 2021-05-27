@@ -15,7 +15,7 @@ public class Symptom {
     private String description;
 
     @Column(name="default_symptom_id")
-    private int defaultSymptomId;
+    private Integer defaultSymptomId;
 
     private String color;
 

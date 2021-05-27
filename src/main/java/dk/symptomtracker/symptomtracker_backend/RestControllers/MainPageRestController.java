@@ -5,6 +5,7 @@ import dk.symptomtracker.symptomtracker_backend.Presenters.SymptomComponentPrese
 import dk.symptomtracker.symptomtracker_backend.Sevices.SymptomRegistrationService;
 import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomVTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +29,10 @@ public class MainPageRestController {
     @Autowired
     UserRepository userRepository;
 
+
+
     @GetMapping("/symptomRegistration")
-    public SymptomVTO[] getSymptomComponent(@RequestParam LocalDate dateRequested, Principal principal){
+    public SymptomVTO[] getSymptomComponent(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate requestDate, Principal principal){
 
         SymptomComponentPresenter symptomComponentPresenter = new SymptomComponentPresenter();
 
@@ -37,11 +40,13 @@ public class MainPageRestController {
         SymptomVTO[] symptomVTOArray = symptomComponentPresenter.getDataForSymptomComponent(
                                         symptomRepository,
                                         symptomRegistrationRepository,
-                                        dateRequested,
+                                        requestDate,
                                         principal,
                                         userRepository);
         return symptomVTOArray;
     }
+
+
 
     @PostMapping("/symptomRegistration")
     public void postSymptomComponent(WebRequest dataFromFormSymptomRegistration, Principal principal){

@@ -15,6 +15,7 @@ public class SymptomRegistration {
     @Column(name="reg_num")
     private int regNum;
 
+    @Column(name="reg_date")
     private LocalDate date;
 
     private int intensity;
