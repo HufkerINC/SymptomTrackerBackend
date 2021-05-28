@@ -27,6 +27,19 @@ public class SymptomRegistrationService {
         }
     }
 
+    public boolean verifyRegNumInBounds(SymptomRegistration symptomRegistrationFromPost,
+                                        SymptomRepository symptomRepository){
+
+        Symptom symptom = symptomRepository.findById(symptomRegistrationFromPost.getSymptomId()).get();
+
+        if(symptomRegistrationFromPost.getRegNum() <= symptom.getNumDailyRegistration()){
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void saveRegistration(SymptomRegistration symptomRegistrationFromPost,
                                  SymptomRegistrationRepository symptomRegistrationRepository){
 

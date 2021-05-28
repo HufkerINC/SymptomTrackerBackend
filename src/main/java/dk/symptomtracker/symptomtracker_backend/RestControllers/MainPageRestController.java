@@ -13,8 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @RestController
 public class MainPageRestController {
@@ -52,15 +50,28 @@ public class MainPageRestController {
 
         SymptomRegistrationService symptomRegistrationService = new SymptomRegistrationService();
 
-        // Varify that the symptomId matches a symptom on logged in user.
+        //Verify that regNum on symptomRegistrationFromPost is les or equal to daylyRegistration on symptom.
+        boolean regNumVerified = symptomRegistrationService.verifyRegNumInBounds(symptomRegistrationFromPost,
+                                                                                    symptomRepository);
+
+
+        if(!regNumVerified){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "verification failed due illegal number of registration on symptom"); // status code: 400
+
+        }
+
+        // Verify that the symptomId matches a symptom on logged in user.
         boolean symptomVerified = symptomRegistrationService.verifyUserSymptom(
                                                                         symptomRegistrationFromPost.getSymptomId(),
                                                                         principal,
                                                                         userRepository,
                                                                         symptomRepository);
+
+
         if(!symptomVerified){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                                "verification failed due mismatch between symptomId and userId"); // status code: 403
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "verification failed due mismatch between symptomId and userId"); // status code: 400
         }
 
         symptomRegistrationService.saveRegistration(symptomRegistrationFromPost, symptomRegistrationRepository);
