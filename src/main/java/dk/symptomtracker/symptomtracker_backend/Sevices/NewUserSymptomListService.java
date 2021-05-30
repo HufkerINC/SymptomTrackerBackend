@@ -15,9 +15,14 @@ public class NewUserSymptomListService {
 
     // Create symptomlist for new user
 
-    public void createSymptomListForUser(DefaultSymptomRepository defaultSymptomRepository, UserRepository userRepository, String email){
+    public void createSymptomListForUser(DefaultSymptomRepository defaultSymptomRepository,
+                                         UserRepository userRepository,
+                                         SymptomRepository symptomRepository,
+                                         String email){
 
-        List<DefaultSymptom> defaultSymptomList = defaultSymptomRepository.findAll();
+        List<DefaultSymptom> defaultSymptomList = defaultSymptomRepository.findAllInSortedList();
+
+        for(DefaultSymptom desymp : defaultSymptomList){System.out.println(desymp.getName());}
 
         int colorIndex = 0;
 
@@ -26,23 +31,20 @@ public class NewUserSymptomListService {
             Symptom symptom = new Symptom();
 
             symptom.setName(defaultSymptom.getName());
+            symptom.setDescription(" ");
             symptom.setDefaultSymptomId(defaultSymptom.getId());
-
-            Optional<User> userOptional = userRepository.findByEmail(email);
-            symptom.setUserId(userOptional.get().getId());
+            symptom.setNumDailyRegistration(3);
+            symptom.setUserId(userRepository.findByEmail(email).get().getId());
+            symptom.setVisibilityOnStatistics(false);
+            symptom.setActive(true);
 
             String color = COLORS[colorIndex];
             colorIndex++;
+            colorIndex = colorIndex % COLORS.length;
 
             symptom.setColor(color);
 
-            symptom.setVisibilityOnStatistics(false);
-
-            symptom.setActive(true);
+            symptomRepository.save(symptom);
         }
-
     }
-
-
-
 }

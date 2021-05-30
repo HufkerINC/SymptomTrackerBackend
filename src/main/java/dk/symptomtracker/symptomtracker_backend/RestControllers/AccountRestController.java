@@ -2,8 +2,8 @@ package dk.symptomtracker.symptomtracker_backend.RestControllers;
 
 import dk.symptomtracker.symptomtracker_backend.Model.DefaultSymptomRepository;
 import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
+import dk.symptomtracker.symptomtracker_backend.Model.SymptomRepository;
 import dk.symptomtracker.symptomtracker_backend.Sevices.CreateAccountService;
-import dk.symptomtracker.symptomtracker_backend.Sevices.NewUserSymptomListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +24,9 @@ public class AccountRestController {
     @Autowired
     private DefaultSymptomRepository defaultSymptomRepository;
 
+    @Autowired
+    private SymptomRepository symptomRepository;
+
     @PostMapping("/createAccount")
     public ResponseEntity createAccount(WebRequest dataFromFormCreateAccount){
 
@@ -33,24 +36,28 @@ public class AccountRestController {
         String password2 = dataFromFormCreateAccount.getParameter("passwordRepeat");
         String email = dataFromFormCreateAccount.getParameter("email");
 
+        // Status code 400
         if (!(password.equals(password2))) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST); } // Status code 400
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
 
-        boolean accountAdded = createAccountService.addAccountToDB(email, password, passwordEncoder, userRepository);
+        boolean accountAdded = createAccountService.addAccountToDB(email,
+                                                            password,
+                                                            passwordEncoder,
+                                                            userRepository,
+                                                            defaultSymptomRepository,
+                                                            symptomRepository);
 
+        // Status code 201
         if(accountAdded){
+            return new ResponseEntity(HttpStatus.CREATED) ;
+        }
 
-            // Create a default symptomlist for new account.
-            NewUserSymptomListService newUserSymptomListService = new NewUserSymptomListService();
-            newUserSymptomListService.createSymptomListForUser(defaultSymptomRepository, userRepository, email);
-
-            return new ResponseEntity(HttpStatus.CREATED) ; } // Status code 201
-
+        // Status code 403
         else{
-            return new ResponseEntity(HttpStatus.FORBIDDEN); } // Status code 403
-
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
     }
-
 }
 
 // info: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
