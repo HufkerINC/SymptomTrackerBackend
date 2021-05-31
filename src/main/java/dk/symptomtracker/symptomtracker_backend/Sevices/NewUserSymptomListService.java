@@ -1,9 +1,7 @@
 package dk.symptomtracker.symptomtracker_backend.Sevices;
 
 import dk.symptomtracker.symptomtracker_backend.Model.*;
-
 import java.util.List;
-import java.util.Optional;
 
 public class NewUserSymptomListService {
 
