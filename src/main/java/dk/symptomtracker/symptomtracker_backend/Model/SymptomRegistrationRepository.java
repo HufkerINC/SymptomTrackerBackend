@@ -17,5 +17,10 @@ public interface SymptomRegistrationRepository extends JpaRepository<SymptomRegi
                                                                                     LocalDate date,
                                                                                     int regNum);
 
+    @Query("select e from SymptomRegistration e where e.symptomId = ?1 and e.date >= ?2 and e.date <= ?3 order by e.date, e.regNum")
+    public List<SymptomRegistration> getAllRegistrationsBySymptomIdOrderedByDateAndRegNum(int symptomId, LocalDate date1, LocalDate date2);
 
 }
+
+
+
