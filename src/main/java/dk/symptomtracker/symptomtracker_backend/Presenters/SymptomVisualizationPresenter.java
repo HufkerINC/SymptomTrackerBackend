@@ -8,6 +8,7 @@ import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomVisualizationVTO;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SymptomVisualizationPresenter {
@@ -28,24 +29,24 @@ public class SymptomVisualizationPresenter {
         // Get all symptoms for logged in user
         List<Symptom> userSymptomList = symptomRepository.getAllSymptomsForUser(loggedInUser.getId());
 
-        // Get array of SymptomVisualizationVTO obj. One for each symptom.
-        SymptomVisualizationVTO[] symptomVisualizationVTOArray = new SymptomVisualizationVTO[userSymptomList.size()];
+        // Get List of SymptomVisualizationVTO obj. One for each symptom.
+        List<SymptomVisualizationVTO> symptomVisualizationVTOList = new ArrayList<SymptomVisualizationVTO>();
+        List<SymptomRegistrationVTO> symptomRegistrationVTOList = new ArrayList<SymptomRegistrationVTO>();
 
-        for(int i = 0; i < userSymptomList.size(); i++){
+        for(Symptom symptom: userSymptomList){
 
             List<SymptomRegistration> orderedRegistrationList =
-                    symptomRegistrationRepository.getAllRegistrationsBySymptomIdOrderedByDateAndRegNum(userSymptomList.get(i).getId(),dateFrom, dateTo);
+                    symptomRegistrationRepository.getAllRegistrationsBySymptomIdOrderedByDateAndRegNum(symptom.getId(),dateFrom, dateTo);
 
             SymptomVisualizationVTO symptomVisualizationVTO = new SymptomVisualizationVTO();
-            symptomVisualizationVTO.setSymptom(userSymptomList.get(i));
+            symptomVisualizationVTO.setSymptom(symptom);
 
-            SymptomRegistrationVTO[] symptomRegistrationVTOArray = new SymptomRegistrationVTO[orderedRegistrationList.size()];
 
-            for(int j = 0; j < orderedRegistrationList.size(); j++){
+            for(SymptomRegistration registration: orderedRegistrationList){
 
                 SymptomRegistrationVTO symptomRegistrationVTO = new SymptomRegistrationVTO();
 
-                symptomRegistrationVTO.setIntensity(orderedRegistrationList.get(j).getIntensity());
+                symptomRegistrationVTO.setIntensity(registration.getIntensity());
 
                 DateToDateTimeService dateToDateTimeService = new DateToDateTimeService();
 
@@ -55,20 +56,26 @@ public class SymptomVisualizationPresenter {
                                         new String[]{"04:00", "12:00", "20:00"}};
 
                 String stringTime = timeOptions2DimensionalArray
-                                            [userSymptomList.get(i).getNumDailyRegistration()]
-                                            [orderedRegistrationList.get(j).getRegNum()];
+                                            [symptom.getNumDailyRegistration()]
+                                            [registration.getRegNum()];
 
-                LocalDateTime dateTime = dateToDateTimeService.getDateTime(orderedRegistrationList.get(j).getDate(), stringTime);
+                LocalDateTime dateTime = dateToDateTimeService.getDateTime(registration.getDate(), stringTime);
 
                 symptomRegistrationVTO.setDateTime(dateTime);
 
-                symptomRegistrationVTOArray[j] = symptomRegistrationVTO;
-
+                symptomRegistrationVTOList.add(symptomRegistrationVTO);
 
             }
 
-            symptomVisualizationVTOArray[i].setSymptomRegistrationVTOArray(symptomRegistrationVTOArray);
+            // Convert from List to array
+            SymptomRegistrationVTO[] symptomRegistrationVTOArray = symptomRegistrationVTOList.toArray(new SymptomRegistrationVTO[symptomRegistrationVTOList.size()]);
+
+            // set SymptomRegistrationVTOArray attribute on symptomVisualizationVTO
+            symptomVisualizationVTO.setSymptomRegistrationVTOArray(symptomRegistrationVTOArray);
+
         }
+
+        SymptomVisualizationVTO[] symptomVisualizationVTOArray = symptomVisualizationVTOList.toArray(new SymptomVisualizationVTO[symptomVisualizationVTOList.size()]);
 
         return symptomVisualizationVTOArray;
     }

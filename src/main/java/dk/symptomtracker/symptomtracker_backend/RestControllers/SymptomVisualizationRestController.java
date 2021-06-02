@@ -28,10 +28,10 @@ public class SymptomVisualizationRestController {
     UserRepository userRepository;
 
     @GetMapping("/symptomVisualization")
-    public SymptomVisualizationVTO[] getSymptomVisualizationComponent(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                                         LocalDate requestDateFrom,
-                                                         LocalDate requestDateTo,
-                                                         Principal principal) {
+    public SymptomVisualizationVTO[] getSymptomVisualizationComponent(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate requestDateFrom,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate requestDateTo,
+            Principal principal) {
 
 
         SymptomVisualizationPresenter symptomVisualizationPresenter = new SymptomVisualizationPresenter();
