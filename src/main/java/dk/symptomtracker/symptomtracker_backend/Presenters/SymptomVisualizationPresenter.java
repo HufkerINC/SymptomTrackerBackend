@@ -31,7 +31,6 @@ public class SymptomVisualizationPresenter {
 
         // Get List of SymptomVisualizationVTO obj. One for each symptom.
         List<SymptomVisualizationVTO> symptomVisualizationVTOList = new ArrayList<SymptomVisualizationVTO>();
-        List<SymptomRegistrationVTO> symptomRegistrationVTOList = new ArrayList<SymptomRegistrationVTO>();
 
         for(Symptom symptom: userSymptomList){
 
@@ -41,6 +40,7 @@ public class SymptomVisualizationPresenter {
             SymptomVisualizationVTO symptomVisualizationVTO = new SymptomVisualizationVTO();
             symptomVisualizationVTO.setSymptom(symptom);
 
+            List<SymptomRegistrationVTO> symptomRegistrationVTOList = new ArrayList<SymptomRegistrationVTO>();
 
             for(SymptomRegistration registration: orderedRegistrationList){
 
@@ -56,8 +56,8 @@ public class SymptomVisualizationPresenter {
                                         new String[]{"04:00", "12:00", "20:00"}};
 
                 String stringTime = timeOptions2DimensionalArray
-                                            [symptom.getNumDailyRegistration()]
-                                            [registration.getRegNum()];
+                                            [symptom.getNumDailyRegistration()-1]
+                                            [registration.getRegNum()-1];
 
                 LocalDateTime dateTime = dateToDateTimeService.getDateTime(registration.getDate(), stringTime);
 
@@ -73,8 +73,11 @@ public class SymptomVisualizationPresenter {
             // set SymptomRegistrationVTOArray attribute on symptomVisualizationVTO
             symptomVisualizationVTO.setSymptomRegistrationVTOArray(symptomRegistrationVTOArray);
 
+            // add symptomVisualizationVTO to symptomVisualizationVTOList
+            symptomVisualizationVTOList.add(symptomVisualizationVTO);
         }
 
+        // Convert symptomVisualizationVTOList to an Array before returning.
         SymptomVisualizationVTO[] symptomVisualizationVTOArray = symptomVisualizationVTOList.toArray(new SymptomVisualizationVTO[symptomVisualizationVTOList.size()]);
 
         return symptomVisualizationVTOArray;

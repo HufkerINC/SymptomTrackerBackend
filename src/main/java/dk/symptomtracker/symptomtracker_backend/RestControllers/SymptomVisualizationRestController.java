@@ -1,15 +1,11 @@
 package dk.symptomtracker.symptomtracker_backend.RestControllers;
 
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRegistrationRepository;
-import dk.symptomtracker.symptomtracker_backend.Model.SymptomRepository;
-import dk.symptomtracker.symptomtracker_backend.Model.UserRepository;
+import dk.symptomtracker.symptomtracker_backend.Model.*;
 import dk.symptomtracker.symptomtracker_backend.Presenters.SymptomVisualizationPresenter;
 import dk.symptomtracker.symptomtracker_backend.VTOs.SymptomVisualizationVTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -47,4 +43,19 @@ public class SymptomVisualizationRestController {
 
         return symptomVisualizationVTOArray;
     }
+
+    @PostMapping("/symptomVisualizationControl")
+    public void postsymptomVisualizationControllRequest(@RequestBody Symptom symptom, Principal principal){
+
+        // Find symptom in DB and set att. visibilityOnStatistics. Update this symptom in DB.
+        // This is done to insure that users are not able to get manipulated date into database.
+        Symptom controlledSymptom = symptomRepository.findById(symptom.getId()).get();
+
+        controlledSymptom.setVisibilityOnStatistics(symptom.getVisibilityOnStatistics());
+
+        symptomRepository.save(controlledSymptom);
+
+    }
+
 }
+

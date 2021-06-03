@@ -12,7 +12,7 @@ public class SymptomVisualizationVTO {
     public Symptom getSymptom() { return symptom; }
     public void setSymptom(Symptom symptom) { this.symptom = symptom; }
 
-    public SymptomRegistrationVTO[] getSymptomRegistrationVTO() { return symptomRegistrationVTOArray; }
+    public SymptomRegistrationVTO[] getSymptomRegistrationVTOArray() { return symptomRegistrationVTOArray; }
     public void setSymptomRegistrationVTOArray(SymptomRegistrationVTO[] symptomRegistrationVTOArray) {
         this.symptomRegistrationVTOArray = symptomRegistrationVTOArray;
     }

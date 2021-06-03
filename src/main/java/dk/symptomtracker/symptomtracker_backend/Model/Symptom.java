@@ -49,7 +49,7 @@ public class Symptom {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    public boolean isVisibilityOnStatistics() { return visibilityOnStatistics; }
+    public boolean getVisibilityOnStatistics() { return visibilityOnStatistics; }
     public void setVisibilityOnStatistics(boolean visibilityOnStatistics) {
         this.visibilityOnStatistics = visibilityOnStatistics; }
 
