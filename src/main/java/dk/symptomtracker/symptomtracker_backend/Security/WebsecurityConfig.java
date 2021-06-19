@@ -81,22 +81,23 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
     // Spring starter security tilbyder måder at konfigurere SPRINGS CORS-funktionalitet.
     // Denne bean bruges til at fortælle Spring Security hvilke andre web domæner som også har lov til at sende services til os.
     // Den skal bruges fordi vores backend og frontend er separate og således har forskellige domæner (url, port mv.)
+
+    // This method returns a CorsConfigurationSource obj. which is an interface obj.
+    // Spring uses this obj to manage the access to application when contacted by the browser through a preflight request.
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:1234")); // Dette er noget lort fordi vi helst ikke vil hardcode den. Her skal der injectes nogle konfigurationer ind når jeg kommer til deployment en dag. Det kan lade sig gøre Heruku i hvert fald.
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","HEAD"));
-        configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","HEAD")); // Head bruges til pre flight.
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type")); // We want to allow "Content-type" header.
         configuration.setAllowCredentials(true); // It is allowed for the client (browser) to access the cookie in response header.
+
+        // UrlBasedCorsConfigurationSource is a class in Spring that implements the CorsConfigurationSource interface.
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // "/**" --> this should apply for all the applications endpoints.
         return source;
     }
-
-
-
-
-
+    
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
