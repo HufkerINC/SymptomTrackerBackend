@@ -97,7 +97,7 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration); // "/**" --> this should apply for all the applications endpoints.
         return source;
     }
-    
+
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception{
